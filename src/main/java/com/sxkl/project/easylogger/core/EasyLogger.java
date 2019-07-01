@@ -1,20 +1,57 @@
 package com.sxkl.project.easylogger.core;
 
+import com.sxkl.project.easylogger.common.LoggerLevelEnum;
+import com.sxkl.project.easylogger.config.Configer;
+
+import java.util.Random;
+
 public class EasyLogger {
 
-    private String level;
+    private EasyLogger() {}
 
-//    private EasyLogger() {}
-//
-//    private static class Singleton {
-//        private static final EasyLogger LOGGER = new EasyLogger();
-//    }
-//
-//    public static EasyLogger getInstance() {
-//        return Singleton.LOGGER;
-//    }
+    public static void info(String msg, Object ...args) {
+        writeToFileAndConsole(null, Configer.needWriteInfoToConsole(), LoggerLevelEnum.INFO, msg, args);
+    }
 
-    public EasyLogger info(String msg, Object ...args) {
-        return null;
+    public static void debug(String msg, Object ...args) {
+        writeToFileAndConsole(null, Configer.NEED_WRITE_TO_CONSOLE, LoggerLevelEnum.DEBUG, msg, args);
+    }
+
+    public static void warn(String msg, Object ...args) {
+        writeToFileAndConsole(null, Configer.needWriteWarnToConsole(), LoggerLevelEnum.WARN, msg, args);
+    }
+
+    public static void error(String msg, Object ...args) {
+        writeToFileAndConsole(null, Configer.NEED_WRITE_TO_CONSOLE, LoggerLevelEnum.ERROR, msg, args);
+    }
+
+    public static void error(Exception e, String msg, Object ...args) {
+        writeToFileAndConsole(e, Configer.NEED_WRITE_TO_CONSOLE, LoggerLevelEnum.ERROR, msg, args);
+    }
+
+    private static void writeToFileAndConsole(Exception e, boolean needWriteToConsole, LoggerLevelEnum level, String msg, Object[] args) {
+        String msgRow = MessageManager.buildMsg(e, level, msg, args);
+        writeToFile(level, msgRow);
+        writeToConsole(needWriteToConsole, msgRow);
+    }
+
+    private static void writeToFile(LoggerLevelEnum level, String msg) {
+        FileManager.getInstance().addMsg(new LogMessage(level, msg));
+    }
+
+    private static void writeToConsole(boolean needWriteToConsole, String msg) {
+        if(needWriteToConsole) {
+            System.out.println(msg);
+        }
+    }
+
+    public static void main(String[] args) {
+        for (int i = 0; i < 10; i++) {
+            new Thread(() -> {
+                for (int j = 0; j < 10000; j++) {
+                    EasyLogger.info(Thread.currentThread().getName()+"info"+j);
+                }
+            }).start();
+        }
     }
 }
