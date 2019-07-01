@@ -41,14 +41,15 @@ public class EasyLogger {
 
     private static void writeToConsole(boolean needWriteToConsole, String msg) {
         if(needWriteToConsole) {
-            System.out.println(msg);
+//            System.out.println(msg);
         }
     }
 
     public static void main(String[] args) {
+        System.out.println(System.currentTimeMillis());
         for (int i = 0; i < 10; i++) {
             new Thread(() -> {
-                for (int j = 0; j < 10000; j++) {
+                for (int j = 0; j < 100000; j++) {
                     EasyLogger.info(Thread.currentThread().getName()+"info"+j);
                 }
             }).start();

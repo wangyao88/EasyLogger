@@ -13,9 +13,12 @@ import java.util.List;
 import java.util.Map;
 import java.util.concurrent.CompletableFuture;
 import java.util.concurrent.ConcurrentLinkedQueue;
+import java.util.concurrent.locks.StampedLock;
 import java.util.stream.Collectors;
 
 public class FileManager {
+
+    private static final StampedLock LOCK = new StampedLock();
 
     private FileManager() {}
 
@@ -28,34 +31,42 @@ public class FileManager {
     }
 
     static {
-        Runtime.getRuntime().addShutdownHook(new Thread(FileManager::flush));
+        Runtime.getRuntime().addShutdownHook(new Thread(new Runnable() {
+            @Override
+            public void run() {
+                FileManager.getInstance().flush();
+            }
+        }));
     }
 
     public void addMsg(LogMessage msg) {
         WorkQueueManager.add(msg);
-        CompletableFuture.runAsync(FileManager::refresh);
+        refresh();
     }
 
-    private static void refresh() {
+    private void refresh() {
         int currentSize = WorkQueueManager.currentSize();
         if(currentSize >= LoggerConstant.QUEUE_SIZE_THRESHOLD) {
             writeMsgToFile();
         }
     }
 
-    private static void writeMsgToFile() {
+    private void writeMsgToFile() {
         ConcurrentLinkedQueue<LogMessage> allMsg = WorkQueueManager.getAllMsg();
         Map<String, List<LogMessage>> map = allMsg.stream().collect(Collectors.groupingBy(LogMessage::getLevel));
         map.forEach((level, logMessages) -> {
             try {
                 File file = getFileByLevel(level);
-                List<String> msgs = logMessages.stream().map(LogMessage::getMsg).collect(Collectors.toList());
-                Files.write(Joiner.on("\n").join(msgs), file, Charsets.UTF_8);
-                double fileSize = FileUtils.getFileSize(file);
-                if(fileSize >= LoggerConstant.FILE_MAX_SIZE) {
-                    File to = getCopyFileByLevel(level);
-                    Files.copy(file, to);
-                    file.deleteOnExit();
+                synchronized (file) {
+                    List<String> msgs = logMessages.stream().map(LogMessage::getMsg).collect(Collectors.toList());
+                    Files.append(Joiner.on("\n").join(msgs), file, Charsets.UTF_8);
+                    double fileSize = FileUtils.getFileSize(file);
+                    if(fileSize >= LoggerConstant.FILE_MAX_SIZE) {
+                        File to = getCopyFileByLevel(level);
+                        Files.copy(file, to);
+                        Files.write("", file, Charsets.UTF_8);
+                        file.deleteOnExit();
+                    }
                 }
             } catch (IOException e) {
                 e.printStackTrace();
@@ -63,7 +74,7 @@ public class FileManager {
         });
     }
 
-    private static File getFileByLevel(String level) throws IOException {
+    private File getFileByLevel(String level) throws IOException {
         String path = getPath(level);
         File file = new File(path);
         if(!file.exists()) {
@@ -75,7 +86,7 @@ public class FileManager {
         return file;
     }
 
-    private static File getCopyFileByLevel(String level) throws IOException {
+    private File getCopyFileByLevel(String level) throws IOException {
         String path = getPath(level);
         String suffix = "-" + LocalDate.now().toString() + "-" + System.currentTimeMillis() + LoggerConstant.LOG_SUFFIX;
         path = path.replaceAll(LoggerConstant.LOG_SUFFIX, suffix);
@@ -83,13 +94,13 @@ public class FileManager {
         if(!file.exists()) {
             boolean newFile = file.createNewFile();
             if(!newFile) {
-                throw new IOException("创建日志文件失败");
+//                throw new IOException("创建日志文件失败");
             }
         }
         return file;
     }
 
-    private static String getPath(String level) {
+    private String getPath(String level) {
         String path = LoggerConstant.LOG_FILE_PATH;
         if(LoggerConstant.SPLITE_LEVEL) {
             path = LoggerConstant.getLogPathByLevel(level);
@@ -97,7 +108,8 @@ public class FileManager {
         return path;
     }
 
-    private static void flush() {
+    private void flush() {
         writeMsgToFile();
+        System.out.println(System.currentTimeMillis());
     }
 }

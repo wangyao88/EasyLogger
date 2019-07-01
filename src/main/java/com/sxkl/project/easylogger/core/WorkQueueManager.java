@@ -5,8 +5,6 @@ import com.google.common.collect.Queues;
 import com.sxkl.project.easylogger.common.LoggerConstant;
 
 import java.util.Map;
-import java.util.Objects;
-import java.util.concurrent.CompletableFuture;
 import java.util.concurrent.ConcurrentLinkedQueue;
 import java.util.concurrent.atomic.AtomicInteger;
 import java.util.concurrent.locks.StampedLock;
@@ -27,40 +25,27 @@ public class WorkQueueManager {
 
     private static ConcurrentLinkedQueue<LogMessage> getReplicaQueueMsgs() {
         long stamp = LOCK.writeLock();
+        ConcurrentLinkedQueue<LogMessage> result;
         String localQueue = currentQueue;
         try {
             currentQueue = currentQueue.equals(LoggerConstant.MASTER_QUEUE) ? LoggerConstant.REPLICA_QUEUE : LoggerConstant.MASTER_QUEUE;
             currentSize.updateAndGet(num -> 0);
+            ConcurrentLinkedQueue<LogMessage> queue = pool.get(localQueue);
+            result = Queues.newConcurrentLinkedQueue(queue);
+            queue.clear();
         } finally {
             LOCK.unlockWrite(stamp);
         }
-        ConcurrentLinkedQueue<LogMessage> queue = pool.get(localQueue);
-        ConcurrentLinkedQueue<LogMessage> result = Queues.newConcurrentLinkedQueue(queue);
-        queue.clear();
         return result;
     }
 
     public static void add(LogMessage msg) {
-        String localQueue;
-        long stamp = LOCK.readLock();
+        long writeStamp = LOCK.writeLock();
         try {
-            localQueue = currentQueue;
-        } finally {
-            LOCK.unlockRead(stamp);
-        }
-        ConcurrentLinkedQueue<LogMessage> queue = pool.get(localQueue);
-        if(!Objects.isNull(queue)) {
-            queue.add(msg);
-        }
-        CompletableFuture.runAsync(WorkQueueManager::increment);
-    }
-
-    private static void increment() {
-        long stamp = LOCK.writeLock();
-        try {
+            pool.get(currentQueue).add(msg);
             currentSize.incrementAndGet();
         } finally {
-            LOCK.unlockWrite(stamp);
+            LOCK.unlockWrite(writeStamp);
         }
     }
 
