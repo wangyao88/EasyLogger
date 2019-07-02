@@ -58,14 +58,18 @@ public class FileManager {
             try {
                 File file = getFileByLevel(level);
                 List<String> msgs = logMessages.stream().map(LogMessage::getMsg).collect(Collectors.toList());
-                Files.append(Joiner.on("\n").join(msgs)+"\n", file, Charsets.UTF_8);
+                String msg = Joiner.on("\n").join(msgs)+"\n";
+                Files.append(msg, file, Charsets.UTF_8);
                 double fileSize = FileUtils.getFileSize(file);
                 if(fileSize >= Configer.getInstance().getFileMaxSize()) {
                     File to = getCopyFileByLevel(level);
-                    file.renameTo(to);
+                    boolean renameTo = file.renameTo(to);
+                    if(!renameTo) {
+                        EasyLogger.error("easy-logger内部错误。"+file.getName()+"拆分为"+to.getName()+"失败！");
+                    }
                 }
-            } catch (IOException e) {
-                e.printStackTrace();
+            } catch (Exception e) {
+                EasyLogger.error(e, "easy-logger内部错误。");
             }
         });
     }
@@ -76,7 +80,7 @@ public class FileManager {
         if(!file.exists()) {
             boolean newFile = file.createNewFile();
             if(!newFile) {
-                throw new IOException("创建日志文件失败");
+                EasyLogger.error("easy-logger内部错误。创建日志文件"+file.getName()+"失败");
             }
         }
         return file;
@@ -91,7 +95,7 @@ public class FileManager {
         if(!file.exists()) {
             boolean newFile = file.createNewFile();
             if(!newFile) {
-                throw new IOException("创建日志文件失败");
+                EasyLogger.error("easy-logger内部错误。创建日志文件"+file.getName()+"失败");
             }
         }
         return file;
@@ -106,6 +110,8 @@ public class FileManager {
     }
 
     private void flush() {
+        writeMsgToFile();
+        EasyLogger.info("easy-logger成功停止服务");
         writeMsgToFile();
         System.out.println(System.currentTimeMillis());
     }
