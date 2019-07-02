@@ -3,8 +3,10 @@ package com.sxkl.project.easylogger.core;
 import com.google.common.base.Charsets;
 import com.google.common.base.Joiner;
 import com.google.common.io.Files;
+import com.sxkl.project.easylogger.common.LoggerConstant;
 import com.sxkl.project.easylogger.config.Configer;
 import com.sxkl.project.easylogger.message.LogMessage;
+import com.sxkl.project.easylogger.timer.LogScheduler;
 import com.sxkl.project.easylogger.utils.FileUtils;
 
 import java.io.File;
@@ -12,15 +14,20 @@ import java.io.IOException;
 import java.time.LocalDate;
 import java.util.List;
 import java.util.Map;
+import java.util.Observable;
 import java.util.concurrent.ConcurrentLinkedQueue;
+import java.util.concurrent.atomic.AtomicBoolean;
 import java.util.concurrent.locks.StampedLock;
 import java.util.stream.Collectors;
 
-public class FileManager {
+public class FileManager extends Observable {
 
     private static final StampedLock LOCK = new StampedLock();
+    private volatile AtomicBoolean first = new AtomicBoolean(true);
 
-    private FileManager() {}
+    private FileManager() {
+        addObserver(LogScheduler.getInstance());
+    }
 
     private static final class Singleton {
         private static final FileManager FILE_MANAGER = new FileManager();
@@ -51,13 +58,21 @@ public class FileManager {
         }
     }
 
-    private void writeMsgToFile() {
+    public void writeMsgToFile() {
         ConcurrentLinkedQueue<LogMessage> allMsg = WorkQueueManager.getAllMsg();
+        if(allMsg.isEmpty()) {
+            return;
+        }
         Map<String, List<LogMessage>> map = allMsg.stream().collect(Collectors.groupingBy(LogMessage::getLevel));
         map.forEach((level, logMessages) -> {
             try {
                 File file = getFileByLevel(level);
                 List<String> msgs = logMessages.stream().map(LogMessage::getMsg).collect(Collectors.toList());
+                if(first.get() && msgs.get(0).contains(LoggerConstant.EASY_LOGGER_START_SUCCESS)) {
+                    setChanged();
+                    notifyObservers();
+                    first.set(false);
+                }
                 String msg = Joiner.on("\n").join(msgs)+"\n";
                 Files.append(msg, file, Charsets.UTF_8);
                 double fileSize = FileUtils.getFileSize(file);
@@ -110,9 +125,14 @@ public class FileManager {
     }
 
     private void flush() {
-        writeMsgToFile();
-        EasyLogger.info("easy-logger成功停止服务");
-        writeMsgToFile();
-        System.out.println(System.currentTimeMillis());
+        long stamp = LOCK.writeLock();
+        try {
+            writeMsgToFile();
+            EasyLogger.info(LoggerConstant.EASY_LOGGER_STOP_SUCCESS);
+            writeMsgToFile();
+            System.out.println(System.currentTimeMillis());
+        } finally {
+            LOCK.unlockWrite(stamp);
+        }
     }
 }

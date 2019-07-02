@@ -2,6 +2,7 @@ package com.sxkl.project.easylogger.core;
 
 import com.google.common.collect.Maps;
 import com.google.common.collect.Queues;
+import com.sxkl.project.easylogger.common.LoggerConstant;
 import com.sxkl.project.easylogger.common.LoggerLevelEnum;
 import com.sxkl.project.easylogger.config.Configer;
 import com.sxkl.project.easylogger.message.LogMessage;
@@ -21,7 +22,7 @@ public class WorkQueueManager {
 
     static {
         ConcurrentLinkedQueue<LogMessage> queueA = Queues.newConcurrentLinkedQueue();
-        String msg = MessageManager.buildMsg(null, LoggerLevelEnum.INFO, "easy-logger成功启动服务！", null);
+        String msg = MessageManager.buildMsg(null, LoggerLevelEnum.INFO, LoggerConstant.EASY_LOGGER_START_SUCCESS, null);
         queueA.add(new LogMessage(LoggerLevelEnum.INFO, msg));
         ConcurrentLinkedQueue<LogMessage> queueB = Queues.newConcurrentLinkedQueue();
         pool.put(Configer.getInstance().getMasterQueue(), queueA);

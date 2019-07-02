@@ -26,4 +26,7 @@ public class LoggerConstant {
     public static final String WHITE_SPACE = " ";
     public static final String Thread_name = "java.lang.Thread";
 
+    public static final String EASY_LOGGER_START_SUCCESS = "easy-logger成功启动服务!";
+    public static final String EASY_LOGGER_STOP_SUCCESS = "easy-logger成功停止服务!";
+
 }
