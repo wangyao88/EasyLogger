@@ -2,31 +2,31 @@ package com.sxkl.project.easylogger.core;
 
 import com.sxkl.project.easylogger.common.LoggerLevelEnum;
 import com.sxkl.project.easylogger.config.Configer;
-
-import java.util.Random;
+import com.sxkl.project.easylogger.message.LogMessage;
+import com.sxkl.project.easylogger.message.MessageManager;
 
 public class EasyLogger {
 
     private EasyLogger() {}
 
     public static void info(String msg, Object ...args) {
-        writeToFileAndConsole(null, Configer.needWriteInfoToConsole(), LoggerLevelEnum.INFO, msg, args);
+        writeToFileAndConsole(null, Configer.getInstance().needWriteInfoToConsole(), LoggerLevelEnum.INFO, msg, args);
     }
 
     public static void debug(String msg, Object ...args) {
-        writeToFileAndConsole(null, Configer.NEED_WRITE_TO_CONSOLE, LoggerLevelEnum.DEBUG, msg, args);
+        writeToFileAndConsole(null, Configer.getInstance().needWriteDebugToConsole(), LoggerLevelEnum.DEBUG, msg, args);
     }
 
     public static void warn(String msg, Object ...args) {
-        writeToFileAndConsole(null, Configer.needWriteWarnToConsole(), LoggerLevelEnum.WARN, msg, args);
+        writeToFileAndConsole(null, Configer.getInstance().needWriteWarnToConsole(), LoggerLevelEnum.WARN, msg, args);
     }
 
     public static void error(String msg, Object ...args) {
-        writeToFileAndConsole(null, Configer.NEED_WRITE_TO_CONSOLE, LoggerLevelEnum.ERROR, msg, args);
+        writeToFileAndConsole(null, Configer.getInstance().needWriteErrorToConsole(), LoggerLevelEnum.ERROR, msg, args);
     }
 
     public static void error(Exception e, String msg, Object ...args) {
-        writeToFileAndConsole(e, Configer.NEED_WRITE_TO_CONSOLE, LoggerLevelEnum.ERROR, msg, args);
+        writeToFileAndConsole(e, Configer.getInstance().needWriteErrorToConsole(), LoggerLevelEnum.ERROR, msg, args);
     }
 
     private static void writeToFileAndConsole(Exception e, boolean needWriteToConsole, LoggerLevelEnum level, String msg, Object[] args) {
@@ -41,13 +41,13 @@ public class EasyLogger {
 
     private static void writeToConsole(boolean needWriteToConsole, String msg) {
         if(needWriteToConsole) {
-//            System.out.println(msg);
+            System.out.println(msg);
         }
     }
 
     public static void main(String[] args) {
         System.out.println(System.currentTimeMillis());
-        for (int i = 0; i < 1; i++) {
+        for (int i = 0; i < 10; i++) {
             new Thread(() -> {
                 for (int j = 0; j < 200000; j++) {
                     EasyLogger.info(Thread.currentThread().getName()+"info"+j);

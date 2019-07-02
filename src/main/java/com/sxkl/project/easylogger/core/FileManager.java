@@ -3,7 +3,8 @@ package com.sxkl.project.easylogger.core;
 import com.google.common.base.Charsets;
 import com.google.common.base.Joiner;
 import com.google.common.io.Files;
-import com.sxkl.project.easylogger.common.LoggerConstant;
+import com.sxkl.project.easylogger.config.Configer;
+import com.sxkl.project.easylogger.message.LogMessage;
 import com.sxkl.project.easylogger.utils.FileUtils;
 
 import java.io.File;
@@ -45,7 +46,7 @@ public class FileManager {
 
     private void refresh() {
         int currentSize = WorkQueueManager.currentSize();
-        if(currentSize >= LoggerConstant.QUEUE_SIZE_THRESHOLD) {
+        if(currentSize >= Configer.getInstance().getQueueSizeThreshold()) {
             writeMsgToFile();
         }
     }
@@ -57,9 +58,9 @@ public class FileManager {
             try {
                 File file = getFileByLevel(level);
                 List<String> msgs = logMessages.stream().map(LogMessage::getMsg).collect(Collectors.toList());
-                Files.append(Joiner.on("\n").join(msgs), file, Charsets.UTF_8);
+                Files.append(Joiner.on("\n").join(msgs)+"\n", file, Charsets.UTF_8);
                 double fileSize = FileUtils.getFileSize(file);
-                if(fileSize >= LoggerConstant.FILE_MAX_SIZE) {
+                if(fileSize >= Configer.getInstance().getFileMaxSize()) {
                     File to = getCopyFileByLevel(level);
                     file.renameTo(to);
                 }
@@ -82,23 +83,24 @@ public class FileManager {
     }
 
     private File getCopyFileByLevel(String level) throws IOException {
+        String logSuffix = Configer.getInstance().getLogSuffix();
         String path = getPath(level);
-        String suffix = "-" + LocalDate.now().toString() + "-" + System.currentTimeMillis() + LoggerConstant.LOG_SUFFIX;
-        path = path.replaceAll(LoggerConstant.LOG_SUFFIX, suffix);
+        String suffix = new StringBuilder().append("-").append(LocalDate.now().toString()).append("-").append(System.currentTimeMillis()).append(logSuffix).toString();
+        path = path.replaceAll(logSuffix, suffix);
         File file = new File(path);
         if(!file.exists()) {
             boolean newFile = file.createNewFile();
             if(!newFile) {
-//                throw new IOException("创建日志文件失败");
+                throw new IOException("创建日志文件失败");
             }
         }
         return file;
     }
 
     private String getPath(String level) {
-        String path = LoggerConstant.LOG_FILE_PATH;
-        if(LoggerConstant.SPLITE_LEVEL) {
-            path = LoggerConstant.getLogPathByLevel(level);
+        String path = Configer.getInstance().getLogFilePath();
+        if(Configer.getInstance().spliteLevel()) {
+            path = Configer.getInstance().getLogPathByLevel(level);
         }
         return path;
     }

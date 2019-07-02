@@ -1,4 +1,4 @@
-package com.sxkl.project.easylogger.core;
+package com.sxkl.project.easylogger.message;
 
 import com.sxkl.project.easylogger.common.LoggerLevelEnum;
 
