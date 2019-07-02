@@ -11,7 +11,6 @@ import java.io.IOException;
 import java.time.LocalDate;
 import java.util.List;
 import java.util.Map;
-import java.util.concurrent.CompletableFuture;
 import java.util.concurrent.ConcurrentLinkedQueue;
 import java.util.concurrent.locks.StampedLock;
 import java.util.stream.Collectors;
@@ -31,17 +30,17 @@ public class FileManager {
     }
 
     static {
-        Runtime.getRuntime().addShutdownHook(new Thread(new Runnable() {
-            @Override
-            public void run() {
-                FileManager.getInstance().flush();
-            }
-        }));
+        Runtime.getRuntime().addShutdownHook(new Thread(() -> FileManager.getInstance().flush()));
     }
 
     public void addMsg(LogMessage msg) {
-        WorkQueueManager.add(msg);
-        refresh();
+        long stamp = LOCK.writeLock();
+        try {
+            WorkQueueManager.add(msg);
+            refresh();
+        } finally {
+            LOCK.unlockWrite(stamp);
+        }
     }
 
     private void refresh() {
@@ -57,16 +56,12 @@ public class FileManager {
         map.forEach((level, logMessages) -> {
             try {
                 File file = getFileByLevel(level);
-                synchronized (file) {
-                    List<String> msgs = logMessages.stream().map(LogMessage::getMsg).collect(Collectors.toList());
-                    Files.append(Joiner.on("\n").join(msgs), file, Charsets.UTF_8);
-                    double fileSize = FileUtils.getFileSize(file);
-                    if(fileSize >= LoggerConstant.FILE_MAX_SIZE) {
-                        File to = getCopyFileByLevel(level);
-                        Files.copy(file, to);
-                        Files.write("", file, Charsets.UTF_8);
-                        file.deleteOnExit();
-                    }
+                List<String> msgs = logMessages.stream().map(LogMessage::getMsg).collect(Collectors.toList());
+                Files.append(Joiner.on("\n").join(msgs), file, Charsets.UTF_8);
+                double fileSize = FileUtils.getFileSize(file);
+                if(fileSize >= LoggerConstant.FILE_MAX_SIZE) {
+                    File to = getCopyFileByLevel(level);
+                    file.renameTo(to);
                 }
             } catch (IOException e) {
                 e.printStackTrace();

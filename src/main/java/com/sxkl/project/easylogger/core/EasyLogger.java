@@ -47,9 +47,9 @@ public class EasyLogger {
 
     public static void main(String[] args) {
         System.out.println(System.currentTimeMillis());
-        for (int i = 0; i < 10; i++) {
+        for (int i = 0; i < 1; i++) {
             new Thread(() -> {
-                for (int j = 0; j < 100000; j++) {
+                for (int j = 0; j < 200000; j++) {
                     EasyLogger.info(Thread.currentThread().getName()+"info"+j);
                 }
             }).start();
