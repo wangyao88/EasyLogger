@@ -25,7 +25,7 @@ public class LogScheduler implements Observer {
         ScheduledExecutorService executorService = Executors.newSingleThreadScheduledExecutor();
         executorService.scheduleAtFixedRate(new LogIntervelFlusher(), 0, Configer.getInstance().getFlushInterval(), TimeUnit.SECONDS);
         if(Configer.getInstance().dayRolling()) {
-
+            executorService.scheduleAtFixedRate(new LogDaylyRoller(), 1, Configer.getInstance().getRollingnterval(), TimeUnit.HOURS);
         }
     }
 

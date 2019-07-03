@@ -8,6 +8,7 @@ String  masterQueue             主队列名字，默认为master
 String  replicaQueue            备份队列名字，默认为replica
 int     queueSizeThreshold      工作队列落盘阀值，默认为10000
 int     flushInterval           定时器定时落盘日志的时间间隔，单位秒， 默认为10秒
+int     rollingnterval          定时器定时按天合并日志的时间间隔，单位小时， 默认为1小时
 double  fileMaxSize             日志文件拆分阀值 默认为100M
 String  infoFilePath            日志级别为info的日志文件名称，默认为info
 String  debugFilePath           日志级别为debug的日志文件名称，默认为debug

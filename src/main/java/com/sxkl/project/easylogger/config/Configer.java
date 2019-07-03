@@ -19,6 +19,7 @@ public class Configer {
 //    private String replicaQueue;
 //    private int queueSizeThreshold;
 //    private int flushInterval;
+//    private int rollingnterval;
 //    private double fileMaxSize;
 //    private String infoFilePath;
 //    private String debugFilePath;
@@ -82,6 +83,10 @@ public class Configer {
 
     public int getFlushInterval() {
         return getNumberValue("flushInterval", LoggerConstant.FLUSH_INTERVAL).intValue();
+    }
+
+    public int getRollingnterval() {
+        return getNumberValue("rollingnterval", LoggerConstant.ROLLING_INTERVAL).intValue();
     }
 
     public double getFileMaxSize() {
