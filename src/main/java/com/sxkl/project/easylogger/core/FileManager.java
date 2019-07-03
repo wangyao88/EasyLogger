@@ -80,7 +80,13 @@ public class FileManager extends Observable {
                     File to = getCopyFileByLevel(level);
                     boolean renameTo = file.renameTo(to);
                     if(!renameTo) {
-                        EasyLogger.error("easy-logger内部错误。"+file.getName()+"拆分为"+to.getName()+"失败！");
+                        String errorMsg = new StringBuilder().append("easy-logger内部错误。")
+                                                             .append(file.getName())
+                                                             .append("拆分为")
+                                                             .append(to.getName())
+                                                             .append("失败！")
+                                                             .toString();
+                        EasyLogger.error(errorMsg);
                     }
                 }
             } catch (Exception e) {
@@ -104,7 +110,12 @@ public class FileManager extends Observable {
     private File getCopyFileByLevel(String level) throws IOException {
         String logSuffix = Configer.getInstance().getLogSuffix();
         String path = getPath(level);
-        String suffix = new StringBuilder().append("-").append(LocalDate.now().toString()).append("-").append(System.currentTimeMillis()).append(logSuffix).toString();
+        String suffix = new StringBuilder().append("-")
+                                           .append(LocalDate.now().toString())
+                                           .append("-")
+                                           .append(System.currentTimeMillis())
+                                           .append(logSuffix)
+                                           .toString();
         path = path.replaceAll(logSuffix, suffix);
         File file = new File(path);
         if(!file.exists()) {
@@ -127,7 +138,6 @@ public class FileManager extends Observable {
     private void flush() {
         long stamp = LOCK.writeLock();
         try {
-            writeMsgToFile();
             EasyLogger.info(LoggerConstant.EASY_LOGGER_STOP_SUCCESS);
             writeMsgToFile();
             System.out.println(System.currentTimeMillis());

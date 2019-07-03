@@ -22,7 +22,6 @@ public class LogScheduler implements Observer {
 
     @Override
     public void update(Observable observable, Object arg) {
-        System.out.println("update");
         ScheduledExecutorService executorService = Executors.newSingleThreadScheduledExecutor();
         executorService.scheduleAtFixedRate(new LogFlusher(), 0, Configer.getInstance().getFlushInterval(), TimeUnit.SECONDS);
     }
