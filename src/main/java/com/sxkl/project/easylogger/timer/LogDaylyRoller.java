@@ -6,13 +6,13 @@ import com.sxkl.project.easylogger.config.Configer;
 
 import java.io.*;
 import java.nio.channels.FileChannel;
-import java.time.LocalDateTime;
 import java.util.*;
+import java.util.regex.Pattern;
 import java.util.stream.Collectors;
 
 public class LogDaylyRoller implements Runnable {
 
-    private static LocalDateTime preRunTime;
+    private static final Pattern pattern = Pattern.compile("\\d{13}");
 
     @Override
     public void run() {
@@ -41,7 +41,13 @@ public class LogDaylyRoller implements Runnable {
                 }
             };
             File[] files = source.listFiles(fileFilter);
-            Map<String, List<File>> fileMap = Arrays.stream(files).collect(Collectors.groupingBy(file -> {
+            Map<String, List<File>> fileMap = Arrays.stream(files).filter(file->{
+                String nameWithoutExtension = Files.getNameWithoutExtension(file.getName());
+                int startIndex = nameWithoutExtension.lastIndexOf("-") + 1;
+                int endIndex = nameWithoutExtension.length();
+                nameWithoutExtension = nameWithoutExtension.substring(startIndex, endIndex);
+                return pattern.matcher(nameWithoutExtension).matches();
+            }).collect(Collectors.groupingBy(file -> {
                 String name = file.getName();
                 int index = name.lastIndexOf("-");
                 name = name.substring(0, index);
@@ -112,10 +118,5 @@ public class LogDaylyRoller implements Runnable {
                 }
             }
         });
-    }
-
-    public static void main(String[] args) {
-        LogDaylyRoller logDaylyRoller = new LogDaylyRoller();
-        logDaylyRoller.run();
     }
 }
