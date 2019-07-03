@@ -1,18 +1,13 @@
 package com.sxkl.project.easylogger.timer;
 
+import com.google.common.collect.Maps;
 import com.google.common.io.Files;
 import com.sxkl.project.easylogger.config.Configer;
-import com.sxkl.project.easylogger.message.LogMessage;
 
-import java.io.File;
-import java.io.FileFilter;
-import java.io.FilenameFilter;
-import java.io.IOException;
+import java.io.*;
+import java.nio.channels.FileChannel;
 import java.time.LocalDateTime;
-import java.util.Arrays;
-import java.util.List;
-import java.util.Map;
-import java.util.Set;
+import java.util.*;
 import java.util.stream.Collectors;
 
 public class LogDaylyRoller implements Runnable {
@@ -21,15 +16,11 @@ public class LogDaylyRoller implements Runnable {
 
     @Override
     public void run() {
-        String logPreffix = Configer.getInstance().getLogPreffix();
-        String logSuffix = Configer.getInstance().getLogSuffix();
-        File dir = new File(logPreffix);
-
-
-        preRunTime = LocalDateTime.now();
+        Map<String, List<File>> groupedFiles = getGroupedFiles();
+        mergeFiles(groupedFiles);
     }
 
-    public static void main(String[] args) {
+    private Map<String, List<File>> getGroupedFiles() {
         String logPreffix = Configer.getInstance().getLogPreffix();
         String logSuffix = Configer.getInstance().getLogSuffix();
         Set<String> allLogNames = Configer.getInstance().getAllLogNames();
@@ -45,8 +36,8 @@ public class LogDaylyRoller implements Runnable {
                     String name = file.getName();
                     String nameWithoutExtension = Files.getNameWithoutExtension(name);
                     String fileExtension = Files.getFileExtension(name);
-                    boolean match = allLogNames.stream().anyMatch(logName-> nameWithoutExtension.startsWith(logName) && !name.equals(logName+logSuffix));
-                    return match && logSuffix.equals("."+fileExtension);
+                    boolean match = allLogNames.stream().anyMatch(logName -> nameWithoutExtension.startsWith(logName) && !name.equals(logName + logSuffix));
+                    return match && logSuffix.equals("." + fileExtension);
                 }
             };
             File[] files = source.listFiles(fileFilter);
@@ -56,21 +47,75 @@ public class LogDaylyRoller implements Runnable {
                 name = name.substring(0, index);
                 return name;
             }));
-            System.out.println(fileMap);
-            fileMap.forEach((subFileName, fileList) -> {
-                String mergeFileName = logPreffix+subFileName+logSuffix;
-                File mergeFile = new File(mergeFileName);
-                if(!mergeFile.exists()) {
-                    try {
-                        boolean newFile = mergeFile.createNewFile();
-                    } catch (IOException e) {
-                        e.printStackTrace();
+            return fileMap;
+        }
+        return Maps.newHashMap();
+    }
+
+    private void mergeFiles(Map<String, List<File>> fileMap) {
+        String logPreffix = Configer.getInstance().getLogPreffix();
+        String logSuffix = Configer.getInstance().getLogSuffix();
+        fileMap.forEach((subFileName, fileList) -> {
+            String mergeFileName = logPreffix+subFileName+logSuffix;
+            File mergeFile = new File(mergeFileName);
+            if(!mergeFile.exists()) {
+                try {
+                    boolean newFile = mergeFile.createNewFile();
+                } catch (IOException e) {
+                    e.printStackTrace();
+                }
+            }
+            if(fileList.size() == 1) {
+                File temp = fileList.get(0);
+                if(!temp.getName().equals(mergeFile.getName())) {
+                    temp.renameTo(mergeFile);
+                    return;
+                }
+            }
+            if(fileList.size() > 1) {
+                FileChannel resultFileChannel = null;
+                try {
+                    resultFileChannel = new FileOutputStream(mergeFile, true).getChannel();
+                    Iterator<File> iterator = fileList.iterator();
+                    while(iterator.hasNext()) {
+                        File file = iterator.next();
+                        if(file.getName().equals(mergeFile.getName())) {
+                            continue;
+                        }
+                        FileChannel blk = null;
+                        try {
+                            blk = new FileInputStream(file).getChannel();
+                            resultFileChannel.transferFrom(blk, resultFileChannel.size(), blk.size());
+                            file.delete();
+                        } catch (IOException e) {
+                            e.printStackTrace();
+                        }finally {
+                            try {
+                                if(!Objects.isNull(blk)) {
+                                    blk.close();
+                                }
+                            } catch (IOException e) {
+                                e.printStackTrace();
+                            }
+                        }
+                    }
+                } catch (Exception e) {
+                    e.printStackTrace();
+                } finally {
+                    if(!Objects.isNull(resultFileChannel)) {
+                        try {
+                            resultFileChannel.close();
+                        } catch (IOException e) {
+                            e.printStackTrace();
+                        }
                     }
                 }
-                if(fileList.size() == 1) {
+            }
+        });
+    }
 
-                }
-            });
-        }
+    public static void main(String[] args) {
+        LogDaylyRoller logDaylyRoller = new LogDaylyRoller();
+        logDaylyRoller.run();
     }
 }
