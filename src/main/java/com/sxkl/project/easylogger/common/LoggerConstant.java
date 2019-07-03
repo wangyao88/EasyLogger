@@ -16,6 +16,7 @@ public class LoggerConstant {
     public static final String LOG_FILE_PATH = "log";
     public static final String LOG_PREFFIX = "./";
     public static final String LOG_SUFFIX = ".log";
+    public static final Boolean DAY_ROLLING = true;
     public static final Boolean SPLITE_LEVEL = true;
     public static final Boolean NEED_WRITE_INFO_TO_CONSOLE = false;
     public static final Boolean NEED_WRITE_ERROR_TO_CONSOLE = false;

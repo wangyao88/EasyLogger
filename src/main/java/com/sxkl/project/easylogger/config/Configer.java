@@ -3,6 +3,7 @@ package com.sxkl.project.easylogger.config;
 import com.google.common.base.Joiner;
 import com.google.common.collect.ImmutableMap;
 import com.google.common.collect.Maps;
+import com.google.common.collect.Sets;
 import com.sxkl.project.easylogger.common.LoggerConstant;
 import com.sxkl.project.easylogger.common.LoggerLevelEnum;
 import com.sxkl.project.easylogger.utils.FileUtils;
@@ -10,6 +11,7 @@ import com.sxkl.project.easylogger.utils.FileUtils;
 import java.util.Enumeration;
 import java.util.Map;
 import java.util.Properties;
+import java.util.Set;
 
 public class Configer {
 
@@ -25,11 +27,13 @@ public class Configer {
 //    private String logFilePath;
 //    private String logPreffix;
 //    private String logSuffix;
+//    private boolean dayRolling;
 //    private boolean spliteLevel;
 //    private boolean needWriteInfoToConsole;
 //    private boolean needWriteWarnToConsole;
 //    private boolean needWriteDebugToConsole;
 //    private boolean needWriteErrorToConsole;
+
 
     private final Map<String, String> LOG_PATH = Maps.newHashMap();
     private Map<String, Object> propertiesMap;
@@ -50,6 +54,10 @@ public class Configer {
             builder.put(key, properties.get(key));
         }
         return builder.build();
+    }
+
+    public Set<String> getAllLogNames() {
+        return Sets.newHashSet(LOG_PATH.values());
     }
 
     private static final class Singleton {
@@ -117,6 +125,11 @@ public class Configer {
 
     public String getLogSuffix() {
         return propertiesMap.getOrDefault("logSuffix", LoggerConstant.LOG_SUFFIX).toString();
+    }
+
+    public boolean dayRolling() {
+        String dayRollingStr = propertiesMap.getOrDefault("dayRolling", LoggerConstant.DAY_ROLLING).toString();
+        return Boolean.parseBoolean(dayRollingStr);
     }
 
     public boolean spliteLevel() {

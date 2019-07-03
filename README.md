@@ -16,7 +16,8 @@ String  errorFilePath           日志级别为error的日志文件名称，默�
 String  logFilePath             在不按日志级别拆分日志文件的情况下，日志文件的日志名，默认为log
 String  logPreffix              日志文件路径的前缀，默认为./
 String  logSuffix               日志文件的后缀，默认为.log
-boolean spliteLevel             是否按日志级别拆分日志
+boolean dayRolling              是否按天拆分日志文件， 默认为true
+boolean spliteLevel             是否按日志级别拆分日志， 默认为true
 boolean needWriteInfoToConsole  是否将info及级别的日志打印到控制台，默认为true
 boolean needWriteDebugToConsole 是否将debug及级别的日志打印到控制台，默认为false
 boolean needWriteWarnToConsole  是否将warn及级别的日志打印到控制台，默认为false

@@ -35,7 +35,7 @@ public class FileUtils {
             inputStream = Configer.class.getClassLoader().getResourceAsStream(LoggerConstant.PROPERTIES_FILE_NAME);
             properties.load(inputStream);
         } catch (Exception e) {
-            System.out.println(MessageManager.buildMsg(e, LoggerLevelEnum.ERROR, "未找到配置文件，使用easy-logger默认配置", null));
+            System.out.println(MessageManager.buildMsg(null, LoggerLevelEnum.WARN, "未找到配置文件，使用easy-logger默认配置", null));
         } finally {
             if(!Objects.isNull(inputStream)) {
                 try {

@@ -4,7 +4,7 @@ import com.sxkl.project.easylogger.core.FileManager;
 
 import java.util.concurrent.locks.StampedLock;
 
-public class LogFlusher implements Runnable {
+public class LogIntervelFlusher implements Runnable {
 
     private static final StampedLock LOCK = new StampedLock();
 
