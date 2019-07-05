@@ -4,6 +4,7 @@ import com.sxkl.project.easylogger.common.LoggerLevelEnum;
 import com.sxkl.project.easylogger.config.Configer;
 import com.sxkl.project.easylogger.message.LogMessage;
 import com.sxkl.project.easylogger.message.MessageManager;
+import net.sf.cglib.proxy.MethodProxy;
 
 public class EasyLogger {
 
@@ -25,12 +26,18 @@ public class EasyLogger {
         writeToFileAndConsole(null, Configer.getInstance().needWriteErrorToConsole(), LoggerLevelEnum.ERROR, msg, args);
     }
 
-    public static void error(Exception e, String msg, Object ...args) {
-        writeToFileAndConsole(e, Configer.getInstance().needWriteErrorToConsole(), LoggerLevelEnum.ERROR, msg, args);
+    public static void error(Throwable throwable, String msg, Object ...args) {
+        writeToFileAndConsole(throwable, Configer.getInstance().needWriteErrorToConsole(), LoggerLevelEnum.ERROR, msg, args);
     }
 
-    private static void writeToFileAndConsole(Exception e, boolean needWriteToConsole, LoggerLevelEnum level, String msg, Object[] args) {
-        String msgRow = MessageManager.buildMsg(e, level, msg, args);
+    public static void doProxy(Object target, MethodProxy methodProxy, boolean needWriteToConsole, LoggerLevelEnum level, Throwable throwable, String msg) {
+        String msgRow = MessageManager.buildProxyMsg(target, methodProxy, needWriteToConsole, level, throwable, msg);
+        writeToFile(level, msgRow);
+        writeToConsole(needWriteToConsole, msgRow);
+    }
+
+    private static void writeToFileAndConsole(Throwable throwable, boolean needWriteToConsole, LoggerLevelEnum level, String msg, Object[] args) {
+        String msgRow = MessageManager.buildMsg(throwable, level, msg, args);
         writeToFile(level, msgRow);
         writeToConsole(needWriteToConsole, msgRow);
     }
