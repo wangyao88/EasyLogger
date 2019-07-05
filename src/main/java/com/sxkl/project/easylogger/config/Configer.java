@@ -19,7 +19,7 @@ public class Configer {
 //    private String replicaQueue;
 //    private int queueSizeThreshold;
 //    private int flushInterval;
-//    private int rollingnterval;
+//    private int mergeInterval;
 //    private double fileMaxSize;
 //    private String infoFilePath;
 //    private String debugFilePath;
@@ -85,8 +85,8 @@ public class Configer {
         return getNumberValue("flushInterval", LoggerConstant.FLUSH_INTERVAL).intValue();
     }
 
-    public int getRollingnterval() {
-        return getNumberValue("rollingnterval", LoggerConstant.ROLLING_INTERVAL).intValue();
+    public int getMergeInterval() {
+        return getNumberValue("mergeInterval", LoggerConstant.MERGE_INTERVAL).intValue();
     }
 
     public double getFileMaxSize() {

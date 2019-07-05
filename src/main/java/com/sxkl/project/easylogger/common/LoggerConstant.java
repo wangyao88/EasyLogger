@@ -8,7 +8,7 @@ public class LoggerConstant {
     public static final String REPLICA_QUEUE = "replica";
     public static final Integer QUEUE_SIZE_THRESHOLD = 10000;
     public static final Integer FLUSH_INTERVAL = 10;
-    public static final Integer ROLLING_INTERVAL = 1;
+    public static final Integer MERGE_INTERVAL = 1;
     public static final Double FILE_MAX_SIZE = 104857600.0; //100 * 1024 * 1024.0;
     public static final String INFO_FILE_PATH = "info";
     public static final String DEBUG_FILE_PATH = "debug";

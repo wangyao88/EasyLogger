@@ -3,6 +3,7 @@ package com.sxkl.project.easylogger.timer;
 import com.google.common.collect.Maps;
 import com.google.common.io.Files;
 import com.sxkl.project.easylogger.config.Configer;
+import com.sxkl.project.easylogger.core.EasyLogger;
 
 import java.io.*;
 import java.nio.channels.FileChannel;
@@ -10,7 +11,7 @@ import java.util.*;
 import java.util.regex.Pattern;
 import java.util.stream.Collectors;
 
-public class LogDaylyRoller implements Runnable {
+public class LogDayMerger implements Runnable {
 
     private static final Pattern pattern = Pattern.compile("\\d{13}");
 
@@ -68,7 +69,7 @@ public class LogDaylyRoller implements Runnable {
                 try {
                     boolean newFile = mergeFile.createNewFile();
                 } catch (IOException e) {
-                    e.printStackTrace();
+                    EasyLogger.error(e, "创建按天合并日志文件的文件失败！");
                 }
             }
             if(fileList.size() == 1) {
@@ -79,42 +80,20 @@ public class LogDaylyRoller implements Runnable {
                 }
             }
             if(fileList.size() > 1) {
-                FileChannel resultFileChannel = null;
-                try {
-                    resultFileChannel = new FileOutputStream(mergeFile, true).getChannel();
-                    Iterator<File> iterator = fileList.iterator();
-                    while(iterator.hasNext()) {
-                        File file = iterator.next();
-                        if(file.getName().equals(mergeFile.getName())) {
+                try(FileChannel resultFileChannel = new FileOutputStream(mergeFile, true).getChannel()) {
+                    for (File file : fileList) {
+                        if (file.getName().equals(mergeFile.getName())) {
                             continue;
                         }
-                        FileChannel blk = null;
-                        try {
-                            blk = new FileInputStream(file).getChannel();
+                        try (FileChannel blk = new FileInputStream(file).getChannel()) {
                             resultFileChannel.transferFrom(blk, resultFileChannel.size(), blk.size());
                             file.delete();
                         } catch (IOException e) {
-                            e.printStackTrace();
-                        }finally {
-                            try {
-                                if(!Objects.isNull(blk)) {
-                                    blk.close();
-                                }
-                            } catch (IOException e) {
-                                e.printStackTrace();
-                            }
+                            EasyLogger.error(e, "按天合并日志文件失败！");
                         }
                     }
                 } catch (Exception e) {
-                    e.printStackTrace();
-                } finally {
-                    if(!Objects.isNull(resultFileChannel)) {
-                        try {
-                            resultFileChannel.close();
-                        } catch (IOException e) {
-                            e.printStackTrace();
-                        }
-                    }
+                    EasyLogger.error(e, "按天合并日志文件失败！");
                 }
             }
         });

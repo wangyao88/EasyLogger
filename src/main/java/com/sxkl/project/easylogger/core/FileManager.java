@@ -135,14 +135,9 @@ public class FileManager extends Observable {
         return path;
     }
 
-    private void flush() {
-        long stamp = LOCK.writeLock();
-        try {
-            EasyLogger.info(LoggerConstant.EASY_LOGGER_STOP_SUCCESS);
-            writeMsgToFile();
-            System.out.println(System.currentTimeMillis());
-        } finally {
-            LOCK.unlockWrite(stamp);
-        }
+    private synchronized void flush() {
+        EasyLogger.info(LoggerConstant.EASY_LOGGER_STOP_SUCCESS);
+        writeMsgToFile();
+        System.out.println(System.currentTimeMillis());
     }
 }

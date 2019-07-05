@@ -5,12 +5,10 @@ import com.google.common.cache.CacheBuilder;
 import com.sxkl.project.easylogger.common.LoggerConstant;
 import com.sxkl.project.easylogger.common.LoggerLevelEnum;
 
-import java.time.format.DateTimeFormatter;
 import java.util.concurrent.ExecutionException;
 
 public class MessageCache {
 
-    private static final DateTimeFormatter dateTimeFormatter = DateTimeFormatter.ofPattern("yyyy-MM-dd HH:mm:ss,SSS");
     private static Cache<String, String> cache = CacheBuilder.newBuilder().maximumSize(1000).build();
 
     public static String get(StackTraceElement element, LoggerLevelEnum level) {
