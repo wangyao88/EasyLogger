@@ -67,13 +67,13 @@ public class FileManager extends Observable {
         map.forEach((level, logMessages) -> {
             try {
                 File file = getFileByLevel(level);
-                List<String> msgs = logMessages.stream().map(LogMessage::getMsg).collect(Collectors.toList());
-                if(first.get() && msgs.get(0).contains(LoggerConstant.EASY_LOGGER_START_SUCCESS)) {
+                List<String> messages = logMessages.stream().map(LogMessage::getMsg).collect(Collectors.toList());
+                if(first.get() && messages.get(0).contains(LoggerConstant.EASY_LOGGER_START_SUCCESS)) {
                     setChanged();
                     notifyObservers();
                     first.set(false);
                 }
-                String msg = Joiner.on("\n").join(msgs)+"\n";
+                String msg = Joiner.on("\n").join(messages)+"\n";
                 Files.append(msg, file, Charsets.UTF_8);
                 double fileSize = FileUtils.getFileSize(file);
                 if(fileSize >= Configer.getInstance().getFileMaxSize()) {
