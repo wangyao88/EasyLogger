@@ -2,6 +2,7 @@ package com.sxkl.project.easylogger.config;
 
 import com.google.common.base.Joiner;
 import com.google.common.collect.ImmutableMap;
+import com.google.common.collect.Lists;
 import com.google.common.collect.Maps;
 import com.google.common.collect.Sets;
 import com.sxkl.project.easylogger.common.LoggerConstant;
@@ -163,6 +164,6 @@ public class Configer {
     }
 
     public String getLogPathByLevel(String level) {
-        return Joiner.on("").join(getLogPreffix(), LOG_PATH.get(level), getLogSuffix());
+        return Joiner.on("").join(Lists.newArrayList(getLogPreffix(), LOG_PATH.get(level), getLogSuffix()));
     }
 }

@@ -3,7 +3,7 @@ package com.sxkl.project.easylogger.message;
 import com.google.common.base.Throwables;
 import com.sxkl.project.easylogger.common.LoggerConstant;
 import com.sxkl.project.easylogger.common.LoggerLevelEnum;
-import net.sf.cglib.proxy.MethodProxy;
+import com.sxkl.project.easylogger.core.Logger;
 
 import java.text.MessageFormat;
 import java.time.LocalDateTime;
@@ -17,20 +17,12 @@ public class MessageManager {
     public static String buildMsg(Throwable throwable, LoggerLevelEnum level, String msg, Object[] args) {
         LocalDateTime localDateTime = LocalDateTime.now();
         String time = dateTimeFormatter.format(localDateTime);
-        StackTraceElement element = getStackTraceElement();
         StringBuilder stringBuilder = new StringBuilder(time);
-        stringBuilder.append(MessageCache.get(element, level)).append(buildMsg(throwable, msg, args));
+        stringBuilder.append(LoggerConstant.WHITE_SPACE)
+                     .append(level.name().toLowerCase())
+                     .append(LoggerConstant.WHITE_SPACE)
+                     .append(buildMsg(throwable, msg, args));
         return stringBuilder.toString();
-    }
-
-    private static StackTraceElement getStackTraceElement() {
-        StackTraceElement[] stackTrace = Thread.currentThread().getStackTrace();
-        int length = stackTrace.length;
-        StackTraceElement lastElement = stackTrace[length - 1];
-        if(lastElement.getClassName().equals(LoggerConstant.Thread_name)) {
-            lastElement = stackTrace[length - 2];
-        }
-        return lastElement;
     }
 
     private static String buildMsg(Throwable throwable, String msg, Object[] args) {
@@ -42,7 +34,7 @@ public class MessageManager {
         return stringBuilder.toString();
     }
 
-    public static String buildProxyMsg(Object target, MethodProxy methodProxy, boolean needWriteToConsole, LoggerLevelEnum level, Throwable throwable, String msg) {
-        return null;
+    public static String buildMsg(Logger logger) {
+        return logger.prettyShow();
     }
 }

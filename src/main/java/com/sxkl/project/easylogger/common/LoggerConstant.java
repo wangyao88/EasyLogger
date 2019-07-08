@@ -15,14 +15,14 @@ public class LoggerConstant {
     public static final String WARN_FILE_PATH = "warn";
     public static final String ERROR_FILE_PATH = "error";
     public static final String LOG_FILE_PATH = "log";
-    public static final String LOG_PREFFIX = "./";
+    public static final String LOG_PREFFIX = "./log/";
     public static final String LOG_SUFFIX = ".log";
     public static final Boolean DAY_ROLLING = true;
     public static final Boolean SPLITE_LEVEL = true;
-    public static final Boolean NEED_WRITE_INFO_TO_CONSOLE = false;
-    public static final Boolean NEED_WRITE_ERROR_TO_CONSOLE = false;
-    public static final Boolean NEED_WRITE_WARN_TO_CONSOLE = false;
-    public static final Boolean NEED_WRITE_DEBUG_TO_CONSOLE = false;
+    public static final Boolean NEED_WRITE_INFO_TO_CONSOLE = true;
+    public static final Boolean NEED_WRITE_ERROR_TO_CONSOLE = true;
+    public static final Boolean NEED_WRITE_WARN_TO_CONSOLE = true;
+    public static final Boolean NEED_WRITE_DEBUG_TO_CONSOLE = true;
 
     public static final String BLANK = "";
     public static final String WHITE_SPACE = " ";
@@ -30,5 +30,4 @@ public class LoggerConstant {
 
     public static final String EASY_LOGGER_START_SUCCESS = "easy-logger成功启动服务!";
     public static final String EASY_LOGGER_STOP_SUCCESS = "easy-logger成功停止服务!";
-
 }

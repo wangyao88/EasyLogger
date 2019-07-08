@@ -23,7 +23,7 @@ public class LogScheduler implements Observer {
     @Override
     public void update(Observable observable, Object arg) {
         ScheduledExecutorService executorService = Executors.newSingleThreadScheduledExecutor();
-        executorService.scheduleAtFixedRate(new LogIntervelFlusher(), 0, Configer.getInstance().getFlushInterval(), TimeUnit.SECONDS);
+        executorService.scheduleAtFixedRate(new LogIntervelFlusher(), 10, Configer.getInstance().getFlushInterval(), TimeUnit.SECONDS);
         if(Configer.getInstance().dayRolling()) {
             executorService.scheduleAtFixedRate(new LogDayMerger(), 1, Configer.getInstance().getMergeInterval(), TimeUnit.HOURS);
         }

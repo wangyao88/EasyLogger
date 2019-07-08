@@ -14,6 +14,7 @@ import java.io.IOException;
 import java.time.LocalDate;
 import java.util.List;
 import java.util.Map;
+import java.util.Objects;
 import java.util.Observable;
 import java.util.concurrent.ConcurrentLinkedQueue;
 import java.util.concurrent.atomic.AtomicBoolean;
@@ -44,6 +45,15 @@ public class FileManager extends Observable {
     public void addMsg(LogMessage msg) {
         long stamp = LOCK.writeLock();
         try {
+            if(first.get()) {
+                ConcurrentLinkedQueue<LogMessage> allMsg = WorkQueueManager.getAllMsg();
+                LogMessage logMessage = allMsg.peek();
+                if(!Objects.isNull(logMessage) && logMessage.getMsg().contains(LoggerConstant.EASY_LOGGER_START_SUCCESS)) {
+                    setChanged();
+                    notifyObservers();
+                    first.set(false);
+                }
+            }
             WorkQueueManager.add(msg);
             refresh();
         } finally {
@@ -128,6 +138,11 @@ public class FileManager extends Observable {
     }
 
     private String getPath(String level) {
+        String logPreffix = Configer.getInstance().getLogPreffix();
+        File rootDir = new File(logPreffix);
+        if(!rootDir.exists() || !rootDir.isDirectory()) {
+            rootDir.mkdirs();
+        }
         String path = Configer.getInstance().getLogFilePath();
         if(Configer.getInstance().spliteLevel()) {
             path = Configer.getInstance().getLogPathByLevel(level);
@@ -138,6 +153,5 @@ public class FileManager extends Observable {
     private synchronized void flush() {
         EasyLogger.info(LoggerConstant.EASY_LOGGER_STOP_SUCCESS);
         writeMsgToFile();
-        System.out.println(System.currentTimeMillis());
     }
 }

@@ -4,7 +4,6 @@ import com.sxkl.project.easylogger.common.LoggerLevelEnum;
 import com.sxkl.project.easylogger.config.Configer;
 import com.sxkl.project.easylogger.message.LogMessage;
 import com.sxkl.project.easylogger.message.MessageManager;
-import net.sf.cglib.proxy.MethodProxy;
 
 public class EasyLogger {
 
@@ -30,10 +29,27 @@ public class EasyLogger {
         writeToFileAndConsole(throwable, Configer.getInstance().needWriteErrorToConsole(), LoggerLevelEnum.ERROR, msg, args);
     }
 
-    public static void doProxy(Object target, MethodProxy methodProxy, boolean needWriteToConsole, LoggerLevelEnum level, Throwable throwable, String msg) {
-        String msgRow = MessageManager.buildProxyMsg(target, methodProxy, needWriteToConsole, level, throwable, msg);
+    public static void log(Logger logger) {
+        LoggerLevelEnum level = logger.getLevel();
+        String msgRow = MessageManager.buildMsg(logger);
         writeToFile(level, msgRow);
-        writeToConsole(needWriteToConsole, msgRow);
+        writeToConsole(needWriteToConsole(level), msgRow);
+    }
+
+    private static boolean needWriteToConsole(LoggerLevelEnum level) {
+        if(level.equals(LoggerLevelEnum.INFO)) {
+            return Configer.getInstance().needWriteInfoToConsole();
+        }
+        if(level.equals(LoggerLevelEnum.DEBUG)) {
+            return Configer.getInstance().needWriteDebugToConsole();
+        }
+        if(level.equals(LoggerLevelEnum.WARN)) {
+            return Configer.getInstance().needWriteWarnToConsole();
+        }
+        if(level.equals(LoggerLevelEnum.ERROR)) {
+            return Configer.getInstance().needWriteErrorToConsole();
+        }
+        return false;
     }
 
     private static void writeToFileAndConsole(Throwable throwable, boolean needWriteToConsole, LoggerLevelEnum level, String msg, Object[] args) {
