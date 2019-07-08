@@ -47,4 +47,12 @@ public class FileUtils {
         }
         return properties;
     }
+
+    public static void mkdirForLogPreffix() {
+        String logPreffix = Configer.getInstance().getLogPreffix();
+        File rootDir = new File(logPreffix);
+        if(!rootDir.exists() || !rootDir.isDirectory()) {
+            rootDir.mkdirs();
+        }
+    }
 }

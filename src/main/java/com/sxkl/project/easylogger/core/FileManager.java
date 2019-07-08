@@ -78,11 +78,6 @@ public class FileManager extends Observable {
             try {
                 File file = getFileByLevel(level);
                 List<String> messages = logMessages.stream().map(LogMessage::getMsg).collect(Collectors.toList());
-                if(first.get() && messages.get(0).contains(LoggerConstant.EASY_LOGGER_START_SUCCESS)) {
-                    setChanged();
-                    notifyObservers();
-                    first.set(false);
-                }
                 String msg = Joiner.on("\n").join(messages)+"\n";
                 Files.append(msg, file, Charsets.UTF_8);
                 double fileSize = FileUtils.getFileSize(file);
@@ -100,6 +95,7 @@ public class FileManager extends Observable {
                     }
                 }
             } catch (Exception e) {
+                e.printStackTrace();
                 EasyLogger.error(e, "easy-logger内部错误。");
             }
         });
@@ -118,15 +114,14 @@ public class FileManager extends Observable {
     }
 
     private File getCopyFileByLevel(String level) throws IOException {
+        FileUtils.mkdirForLogPreffix();
         String logSuffix = Configer.getInstance().getLogSuffix();
-        String path = getPath(level);
-        String suffix = new StringBuilder().append("-")
+        String path = new StringBuilder(Configer.getInstance().getLogPreffix()).append(level).append("-")
                                            .append(LocalDate.now().toString())
                                            .append("-")
                                            .append(System.currentTimeMillis())
                                            .append(logSuffix)
                                            .toString();
-        path = path.replaceAll(logSuffix, suffix);
         File file = new File(path);
         if(!file.exists()) {
             boolean newFile = file.createNewFile();
@@ -138,11 +133,7 @@ public class FileManager extends Observable {
     }
 
     private String getPath(String level) {
-        String logPreffix = Configer.getInstance().getLogPreffix();
-        File rootDir = new File(logPreffix);
-        if(!rootDir.exists() || !rootDir.isDirectory()) {
-            rootDir.mkdirs();
-        }
+        FileUtils.mkdirForLogPreffix();
         String path = Configer.getInstance().getLogFilePath();
         if(Configer.getInstance().spliteLevel()) {
             path = Configer.getInstance().getLogPathByLevel(level);
@@ -153,5 +144,6 @@ public class FileManager extends Observable {
     private synchronized void flush() {
         EasyLogger.info(LoggerConstant.EASY_LOGGER_STOP_SUCCESS);
         writeMsgToFile();
+        System.out.println(System.currentTimeMillis());
     }
 }
