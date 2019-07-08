@@ -144,6 +144,5 @@ public class FileManager extends Observable {
     private synchronized void flush() {
         EasyLogger.info(LoggerConstant.EASY_LOGGER_STOP_SUCCESS);
         writeMsgToFile();
-        System.out.println(System.currentTimeMillis());
     }
 }
