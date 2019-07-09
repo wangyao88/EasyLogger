@@ -41,8 +41,7 @@ public class Configer {
     private Map<String, Object> propertiesMap;
 
     private Configer() {
-        Properties properties = FileUtils.getConfigProperties();
-        propertiesMap = fromProperties(properties);
+        refreshProperties();
         LOG_PATH.put(LoggerLevelEnum.INFO.name().toLowerCase(), getInfoFilePath());
         LOG_PATH.put(LoggerLevelEnum.DEBUG.name().toLowerCase(), getDebugFilePath());
         LOG_PATH.put(LoggerLevelEnum.WARN.name().toLowerCase(), getWarnFilePath());
@@ -56,6 +55,11 @@ public class Configer {
             builder.put(key, properties.get(key));
         }
         return builder.build();
+    }
+
+    public void refreshProperties() {
+        Properties properties = FileUtils.getConfigProperties();
+        propertiesMap = fromProperties(properties);
     }
 
     public Set<String> getAllLogNames() {

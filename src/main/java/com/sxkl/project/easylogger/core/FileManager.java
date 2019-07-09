@@ -8,6 +8,7 @@ import com.sxkl.project.easylogger.config.Configer;
 import com.sxkl.project.easylogger.message.LogMessage;
 import com.sxkl.project.easylogger.timer.LogScheduler;
 import com.sxkl.project.easylogger.utils.FileUtils;
+import com.sxkl.project.easylogger.watcher.FileWatcherObserver;
 
 import java.io.File;
 import java.io.IOException;
@@ -28,6 +29,7 @@ public class FileManager extends Observable {
 
     private FileManager() {
         addObserver(LogScheduler.getInstance());
+        addObserver(new FileWatcherObserver());
     }
 
     private static final class Singleton {
