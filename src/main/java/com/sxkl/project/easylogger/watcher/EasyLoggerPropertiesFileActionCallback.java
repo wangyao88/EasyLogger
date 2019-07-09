@@ -13,19 +13,16 @@ public class EasyLoggerPropertiesFileActionCallback implements FileActionCallbac
 
     @Override
     public void delete(File file) {
-        System.out.println("----------delete----------");
         Configer.getInstance().refreshProperties();
     }
 
     @Override
     public void modify(File file) {
-        System.out.println("-----------modify---------");
         Configer.getInstance().refreshProperties();
     }
 
     @Override
     public void create(File file) {
-        System.out.println("---------create-----------");
         Configer.getInstance().refreshProperties();
     }
 }
