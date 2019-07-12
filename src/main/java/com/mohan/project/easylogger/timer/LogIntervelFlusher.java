@@ -1,6 +1,6 @@
-package com.sxkl.project.easylogger.timer;
+package com.mohan.project.easylogger.timer;
 
-import com.sxkl.project.easylogger.core.FileManager;
+import com.mohan.project.easylogger.core.FileManager;
 
 public class LogIntervelFlusher implements Runnable {
 

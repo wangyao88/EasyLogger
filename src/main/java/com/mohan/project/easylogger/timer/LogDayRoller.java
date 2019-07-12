@@ -1,12 +1,12 @@
-package com.sxkl.project.easylogger.timer;
+package com.mohan.project.easylogger.timer;
 
 import com.google.common.base.Joiner;
 import com.google.common.collect.Lists;
-import com.sxkl.project.easylogger.common.LoggerConstant;
-import com.sxkl.project.easylogger.common.LoggerLevelEnum;
-import com.sxkl.project.easylogger.config.Configer;
-import com.sxkl.project.easylogger.core.EasyLogger;
-import com.sxkl.project.easylogger.utils.FileUtils;
+import com.mohan.project.easylogger.common.LoggerConstant;
+import com.mohan.project.easylogger.common.LoggerLevelEnum;
+import com.mohan.project.easylogger.config.Configer;
+import com.mohan.project.easylogger.core.EasyLogger;
+import com.mohan.project.easylogger.utils.FileUtils;
 
 import java.io.File;
 import java.time.LocalDate;

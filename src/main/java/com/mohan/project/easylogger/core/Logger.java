@@ -1,8 +1,8 @@
-package com.sxkl.project.easylogger.core;
+package com.mohan.project.easylogger.core;
 
 import com.google.common.base.Throwables;
-import com.sxkl.project.easylogger.common.LoggerConstant;
-import com.sxkl.project.easylogger.common.LoggerLevelEnum;
+import com.mohan.project.easylogger.common.LoggerConstant;
+import com.mohan.project.easylogger.common.LoggerLevelEnum;
 import lombok.Builder;
 import lombok.Data;
 

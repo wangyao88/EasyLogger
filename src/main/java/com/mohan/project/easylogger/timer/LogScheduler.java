@@ -1,6 +1,6 @@
-package com.sxkl.project.easylogger.timer;
+package com.mohan.project.easylogger.timer;
 
-import com.sxkl.project.easylogger.config.Configer;
+import com.mohan.project.easylogger.config.Configer;
 
 import java.util.Observable;
 import java.util.Observer;

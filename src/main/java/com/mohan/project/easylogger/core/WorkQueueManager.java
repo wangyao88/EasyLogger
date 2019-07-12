@@ -1,12 +1,12 @@
-package com.sxkl.project.easylogger.core;
+package com.mohan.project.easylogger.core;
 
 import com.google.common.collect.Maps;
 import com.google.common.collect.Queues;
-import com.sxkl.project.easylogger.common.LoggerConstant;
-import com.sxkl.project.easylogger.common.LoggerLevelEnum;
-import com.sxkl.project.easylogger.config.Configer;
-import com.sxkl.project.easylogger.message.LogMessage;
-import com.sxkl.project.easylogger.message.MessageManager;
+import com.mohan.project.easylogger.config.Configer;
+import com.mohan.project.easylogger.common.LoggerConstant;
+import com.mohan.project.easylogger.common.LoggerLevelEnum;
+import com.mohan.project.easylogger.message.LogMessage;
+import com.mohan.project.easylogger.message.MessageManager;
 
 import java.util.Map;
 import java.util.concurrent.ConcurrentLinkedQueue;

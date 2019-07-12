@@ -1,9 +1,9 @@
-package com.sxkl.project.easylogger.message;
+package com.mohan.project.easylogger.message;
 
 import com.google.common.base.Throwables;
-import com.sxkl.project.easylogger.common.LoggerConstant;
-import com.sxkl.project.easylogger.common.LoggerLevelEnum;
-import com.sxkl.project.easylogger.core.Logger;
+import com.mohan.project.easylogger.common.LoggerConstant;
+import com.mohan.project.easylogger.common.LoggerLevelEnum;
+import com.mohan.project.easylogger.core.Logger;
 
 import java.text.MessageFormat;
 import java.time.LocalDateTime;

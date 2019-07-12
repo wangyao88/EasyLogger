@@ -1,6 +1,6 @@
-package com.sxkl.project.easylogger.watcher;
+package com.mohan.project.easylogger.watcher;
 
-import com.sxkl.project.easylogger.config.Configer;
+import com.mohan.project.easylogger.config.Configer;
 
 import java.io.File;
 

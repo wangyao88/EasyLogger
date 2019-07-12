@@ -1,9 +1,9 @@
-package com.sxkl.project.easylogger.utils;
+package com.mohan.project.easylogger.utils;
 
-import com.sxkl.project.easylogger.common.LoggerConstant;
-import com.sxkl.project.easylogger.common.LoggerLevelEnum;
-import com.sxkl.project.easylogger.config.Configer;
-import com.sxkl.project.easylogger.message.MessageManager;
+import com.mohan.project.easylogger.common.LoggerConstant;
+import com.mohan.project.easylogger.config.Configer;
+import com.mohan.project.easylogger.common.LoggerLevelEnum;
+import com.mohan.project.easylogger.message.MessageManager;
 
 import java.io.File;
 import java.io.IOException;

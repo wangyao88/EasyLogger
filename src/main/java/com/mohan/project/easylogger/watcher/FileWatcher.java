@@ -1,7 +1,7 @@
-package com.sxkl.project.easylogger.watcher;
+package com.mohan.project.easylogger.watcher;
 
 import com.google.common.collect.Maps;
-import com.sxkl.project.easylogger.common.LoggerConstant;
+import com.mohan.project.easylogger.common.LoggerConstant;
 
 import java.io.File;
 import java.io.IOException;

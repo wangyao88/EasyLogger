@@ -1,14 +1,14 @@
-package com.sxkl.project.easylogger.core;
+package com.mohan.project.easylogger.core;
 
 import com.google.common.base.Charsets;
 import com.google.common.base.Joiner;
 import com.google.common.io.Files;
-import com.sxkl.project.easylogger.common.LoggerConstant;
-import com.sxkl.project.easylogger.config.Configer;
-import com.sxkl.project.easylogger.message.LogMessage;
-import com.sxkl.project.easylogger.timer.LogScheduler;
-import com.sxkl.project.easylogger.utils.FileUtils;
-import com.sxkl.project.easylogger.watcher.FileWatcherObserver;
+import com.mohan.project.easylogger.common.LoggerConstant;
+import com.mohan.project.easylogger.config.Configer;
+import com.mohan.project.easylogger.utils.FileUtils;
+import com.mohan.project.easylogger.message.LogMessage;
+import com.mohan.project.easylogger.timer.LogScheduler;
+import com.mohan.project.easylogger.watcher.FileWatcherObserver;
 
 import java.io.File;
 import java.io.IOException;

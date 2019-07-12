@@ -1,4 +1,4 @@
-package com.sxkl.project.easylogger.watcher;
+package com.mohan.project.easylogger.watcher;
 
 import java.io.File;
 

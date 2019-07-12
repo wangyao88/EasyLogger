@@ -1,4 +1,4 @@
-package com.sxkl.project.easylogger.common;
+package com.mohan.project.easylogger.common;
 
 public class LoggerConstant {
 

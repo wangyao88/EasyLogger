@@ -1,13 +1,13 @@
-package com.sxkl.project.easylogger.config;
+package com.mohan.project.easylogger.config;
 
 import com.google.common.base.Joiner;
 import com.google.common.collect.ImmutableMap;
 import com.google.common.collect.Lists;
 import com.google.common.collect.Maps;
 import com.google.common.collect.Sets;
-import com.sxkl.project.easylogger.common.LoggerConstant;
-import com.sxkl.project.easylogger.common.LoggerLevelEnum;
-import com.sxkl.project.easylogger.utils.FileUtils;
+import com.mohan.project.easylogger.common.LoggerConstant;
+import com.mohan.project.easylogger.common.LoggerLevelEnum;
+import com.mohan.project.easylogger.utils.FileUtils;
 
 import java.util.Enumeration;
 import java.util.Map;

@@ -1,6 +1,6 @@
-package com.sxkl.project.easylogger.message;
+package com.mohan.project.easylogger.message;
 
-import com.sxkl.project.easylogger.common.LoggerLevelEnum;
+import com.mohan.project.easylogger.common.LoggerLevelEnum;
 
 import java.util.Objects;
 
