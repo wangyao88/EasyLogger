@@ -47,7 +47,7 @@ public class Logger {
                      .append(LoggerConstant.WHITE_SPACE)
                      .append(message);
         if(!Objects.isNull(throwable)) {
-            stringBuilder.append("\n完成错误栈信息：\n").append(Throwables.getStackTraceAsString(throwable));
+            stringBuilder.append("\n完整错误栈信息：\n").append(Throwables.getStackTraceAsString(throwable));
         }
         return stringBuilder.toString();
     }
