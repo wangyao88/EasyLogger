@@ -12,6 +12,11 @@ import java.util.Map;
 
 import static java.nio.file.LinkOption.NOFOLLOW_LINKS;
 
+/**
+ * EasyLogger文件监控类
+ * @author mohan
+ * @date 2019-08-29 16:00:23
+ */
 public class FileWatcher {
 
     private final WatchService watcher;

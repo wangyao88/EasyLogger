@@ -10,6 +10,11 @@ import java.time.LocalDateTime;
 import java.time.format.DateTimeFormatter;
 import java.util.Objects;
 
+/**
+ * EasyLogger日志消息封装类
+ * @author mohan
+ * @date 2019-08-29 16:00:23
+ */
 @Data
 @Builder
 public class Logger {

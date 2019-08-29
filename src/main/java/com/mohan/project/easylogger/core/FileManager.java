@@ -22,6 +22,11 @@ import java.util.concurrent.atomic.AtomicBoolean;
 import java.util.concurrent.locks.StampedLock;
 import java.util.stream.Collectors;
 
+/**
+ * EasyLogger日志消息落盘类
+ * @author mohan
+ * @date 2019-08-29 16:00:23
+ */
 public class FileManager extends Observable {
 
     private static final StampedLock LOCK = new StampedLock();
@@ -55,6 +60,7 @@ public class FileManager extends Observable {
                     notifyObservers();
                     first.set(false);
                 }
+                allMsg.forEach(WorkQueueManager::add);
             }
             WorkQueueManager.add(msg);
             refresh();

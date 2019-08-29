@@ -5,6 +5,11 @@ import com.mohan.project.easylogger.common.LoggerLevelEnum;
 import com.mohan.project.easylogger.message.LogMessage;
 import com.mohan.project.easylogger.message.MessageManager;
 
+/**
+ * EasyLogger对外API
+ * @author mohan
+ * @date 2019-08-29 16:00:23
+ */
 public class EasyLogger {
 
     private EasyLogger() {}
@@ -66,9 +71,5 @@ public class EasyLogger {
         if(needWriteToConsole) {
             System.out.println(msg);
         }
-    }
-
-    public static void main(String[] args) {
-        EasyLogger.info("-----");
     }
 }

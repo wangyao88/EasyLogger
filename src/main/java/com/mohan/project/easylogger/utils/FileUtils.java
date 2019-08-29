@@ -11,6 +11,11 @@ import java.io.InputStream;
 import java.util.Objects;
 import java.util.Properties;
 
+/**
+ * EasyLogger文件操作相关工具类
+ * @author mohan
+ * @date 2019-08-29 16:00:23
+ */
 public class FileUtils {
 
     public static double getFileSize(File file) {
@@ -35,7 +40,7 @@ public class FileUtils {
             inputStream = Configer.class.getClassLoader().getResourceAsStream(LoggerConstant.PROPERTIES_FILE_NAME);
             properties.load(inputStream);
         } catch (Exception e) {
-            System.out.println(MessageManager.buildMsg(null, LoggerLevelEnum.WARN, "未找到配置文件，使用easy-logger默认配置", null));
+            System.out.println(MessageManager.buildMsg(null, LoggerLevelEnum.WARN, "EasyLogger 未找到配置文件，使用easy-logger默认配置", null));
         } finally {
             if(!Objects.isNull(inputStream)) {
                 try {

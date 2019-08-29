@@ -4,6 +4,11 @@ import com.mohan.project.easylogger.common.LoggerLevelEnum;
 
 import java.util.Objects;
 
+/**
+ * EasyLogger内部消息封装类
+ * @author mohan
+ * @date 2019-08-29 16:00:23
+ */
 public class LogMessage {
 
     private LoggerLevelEnum level;

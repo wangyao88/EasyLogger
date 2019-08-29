@@ -11,6 +11,11 @@ import java.util.*;
 import java.util.regex.Pattern;
 import java.util.stream.Collectors;
 
+/**
+ * EasyLogger按天合并日志文件
+ * @author mohan
+ * @date 2019-08-29 16:00:23
+ */
 public class LogDayMerger implements Runnable {
 
     private static final Pattern pattern = Pattern.compile("\\d{13}");

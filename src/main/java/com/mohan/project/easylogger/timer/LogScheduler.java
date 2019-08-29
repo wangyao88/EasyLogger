@@ -8,6 +8,11 @@ import java.util.concurrent.Executors;
 import java.util.concurrent.ScheduledExecutorService;
 import java.util.concurrent.TimeUnit;
 
+/**
+ * EasyLogger定时任务类
+ * @author mohan
+ * @date 2019-08-29 16:00:23
+ */
 public class LogScheduler implements Observer {
 
     private LogScheduler() {}

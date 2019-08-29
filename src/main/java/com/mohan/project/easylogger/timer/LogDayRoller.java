@@ -13,6 +13,11 @@ import java.time.LocalDate;
 import java.time.LocalDateTime;
 import java.util.regex.Pattern;
 
+/**
+ * EasyLogger按天拆分日志文件
+ * @author mohan
+ * @date 2019-08-29 16:00:23
+ */
 public class LogDayRoller implements Runnable {
 
     private static final Pattern pattern = Pattern.compile("\\d{13}");

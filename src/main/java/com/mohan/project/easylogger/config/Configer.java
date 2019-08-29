@@ -14,6 +14,11 @@ import java.util.Map;
 import java.util.Properties;
 import java.util.Set;
 
+/**
+ * EasyLogger配置类
+ * @author mohan
+ * @date 2019-08-29 16:00:23
+ */
 public class Configer {
 
 //    private String masterQueue;

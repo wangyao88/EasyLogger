@@ -7,12 +7,18 @@ import com.mohan.project.easylogger.common.LoggerConstant;
 import com.mohan.project.easylogger.common.LoggerLevelEnum;
 import com.mohan.project.easylogger.message.LogMessage;
 import com.mohan.project.easylogger.message.MessageManager;
+import com.mohan.project.easytools.file.FileTools;
 
 import java.util.Map;
 import java.util.concurrent.ConcurrentLinkedQueue;
 import java.util.concurrent.atomic.AtomicInteger;
 import java.util.concurrent.locks.StampedLock;
 
+/**
+ * EasyLogger日志记录核心类
+ * @author mohan
+ * @date 2019-08-29 16:00:23
+ */
 public class WorkQueueManager {
 
     private static final StampedLock LOCK = new StampedLock();
@@ -23,7 +29,11 @@ public class WorkQueueManager {
     static {
         ConcurrentLinkedQueue<LogMessage> queueA = Queues.newConcurrentLinkedQueue();
         String msg = MessageManager.buildMsg(null, LoggerLevelEnum.INFO, LoggerConstant.EASY_LOGGER_START_SUCCESS, null);
+        System.out.println(msg);
         queueA.add(new LogMessage(LoggerLevelEnum.INFO, msg));
+        String banner = FileTools.getBanner();
+        System.out.println(banner);
+        queueA.add(new LogMessage(LoggerLevelEnum.INFO, banner));
         ConcurrentLinkedQueue<LogMessage> queueB = Queues.newConcurrentLinkedQueue();
         pool.put(Configer.getInstance().getMasterQueue(), queueA);
         pool.put(Configer.getInstance().getReplicaQueue(), queueB);
