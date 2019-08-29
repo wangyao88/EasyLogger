@@ -1,6 +1,8 @@
 package com.mohan.project.easylogger.watcher;
 
+import com.mohan.project.easylogger.common.LoggerLevelEnum;
 import com.mohan.project.easylogger.config.Configer;
+import com.mohan.project.easylogger.message.MessageManager;
 
 import java.io.File;
 import java.net.URL;
@@ -19,7 +21,7 @@ public class FileWatcherObserver implements Observer {
             final File file = new File(path);
             ScheduledExecutorService scheduledExecutorService = Executors.newSingleThreadScheduledExecutor();
             scheduledExecutorService.submit(() -> new FileWatcher(file, false, new EasyLoggerPropertiesFileActionCallback()));
-            System.out.println("正在监视文件夹:" + file.getAbsolutePath() + "的变化");
+            System.out.println(MessageManager.buildMsg(null, LoggerLevelEnum.INFO, "正在监视文件夹:{0}的变化", new Object[]{file.getAbsolutePath()}));
         } catch (Exception e) {
             e.printStackTrace();
         }
