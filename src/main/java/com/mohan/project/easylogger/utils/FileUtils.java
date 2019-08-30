@@ -3,7 +3,9 @@ package com.mohan.project.easylogger.utils;
 import com.mohan.project.easylogger.common.LoggerConstant;
 import com.mohan.project.easylogger.config.Configer;
 import com.mohan.project.easylogger.common.LoggerLevelEnum;
+import com.mohan.project.easylogger.exception.MakeLogPreffixDirectoryException;
 import com.mohan.project.easylogger.message.MessageManager;
+import com.mohan.project.easytools.common.StringTools;
 
 import java.io.File;
 import java.io.IOException;
@@ -57,7 +59,11 @@ public class FileUtils {
         String logPreffix = Configer.getInstance().getLogPreffix();
         File rootDir = new File(logPreffix);
         if(!rootDir.exists() || !rootDir.isDirectory()) {
-            rootDir.mkdirs();
+            boolean mkdirs = rootDir.mkdirs();
+            if(!mkdirs) {
+                String msg = StringTools.append(StringTools.SPACE, MakeLogPreffixDirectoryException.DEFAULT_MESSAGE, rootDir.getAbsolutePath());
+                throw new MakeLogPreffixDirectoryException(msg);
+            }
         }
     }
 }
