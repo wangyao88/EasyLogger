@@ -1,7 +1,5 @@
 package com.mohan.project.easylogger.exception;
 
-import com.mohan.project.easytools.common.StringTools;
-
 /**
  * 创建指定日志文件夹失败
  * @author mohan
