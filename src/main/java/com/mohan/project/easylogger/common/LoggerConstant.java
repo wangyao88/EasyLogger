@@ -7,6 +7,9 @@ package com.mohan.project.easylogger.common;
  */
 public class LoggerConstant {
 
+    public static final String DEFAULT_BANNER_FILE_NAME = "EasyLogger-banner.txt";
+    public static final String PROJECT_NAME = "EasyLogger";
+
     public static final String PROPERTIES_FILE_NAME = "easylogger.properties";
 
     public static final String MASTER_QUEUE = "master";

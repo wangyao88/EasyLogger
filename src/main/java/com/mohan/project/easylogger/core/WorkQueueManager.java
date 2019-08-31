@@ -7,6 +7,8 @@ import com.mohan.project.easylogger.common.LoggerConstant;
 import com.mohan.project.easylogger.common.LoggerLevelEnum;
 import com.mohan.project.easylogger.message.LogMessage;
 import com.mohan.project.easylogger.message.MessageManager;
+import com.mohan.project.easylogger.utils.FileUtils;
+import com.mohan.project.easytools.file.BannerTools;
 import com.mohan.project.easytools.file.FileTools;
 
 import java.util.Map;
@@ -31,7 +33,7 @@ public class WorkQueueManager {
         String msg = MessageManager.buildMsg(null, LoggerLevelEnum.INFO, LoggerConstant.EASY_LOGGER_START_SUCCESS, null);
         System.out.println(msg);
         queueA.add(new LogMessage(LoggerLevelEnum.INFO, msg));
-        String banner = FileTools.getBanner();
+        String banner = BannerTools.getBanner(LoggerConstant.DEFAULT_BANNER_FILE_NAME, LoggerConstant.PROJECT_NAME);
         System.out.println(banner);
         queueA.add(new LogMessage(LoggerLevelEnum.INFO, banner));
         ConcurrentLinkedQueue<LogMessage> queueB = Queues.newConcurrentLinkedQueue();

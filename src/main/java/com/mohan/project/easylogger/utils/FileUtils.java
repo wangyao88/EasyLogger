@@ -1,16 +1,17 @@
 package com.mohan.project.easylogger.utils;
 
 import com.mohan.project.easylogger.common.LoggerConstant;
-import com.mohan.project.easylogger.config.Configer;
 import com.mohan.project.easylogger.common.LoggerLevelEnum;
+import com.mohan.project.easylogger.config.Configer;
 import com.mohan.project.easylogger.exception.MakeLogPreffixDirectoryException;
 import com.mohan.project.easylogger.message.MessageManager;
 import com.mohan.project.easytools.common.StringTools;
+import com.mohan.project.easytools.file.FileTools;
 
-import java.io.File;
-import java.io.IOException;
-import java.io.InputStream;
+import java.io.*;
+import java.net.URL;
 import java.util.Objects;
+import java.util.Optional;
 import java.util.Properties;
 
 /**
@@ -64,6 +65,24 @@ public class FileUtils {
                 String msg = StringTools.append(StringTools.SPACE, MakeLogPreffixDirectoryException.DEFAULT_MESSAGE, rootDir.getAbsolutePath());
                 throw new MakeLogPreffixDirectoryException(msg);
             }
+        }
+    }
+
+    public static String getRelativeBanner(String bannerFileName, String defaultBanner) {
+        try {
+            String path = FileUtils.class.getResource("/" + bannerFileName).getPath();
+            Optional<String> content = FileTools.getContent(path);
+            return content.orElse(defaultBanner);
+
+//            BufferedReader in = new BufferedReader(new InputStreamReader(FileUtils.class.getClassLoader().getResourceAsStream(bannerFileName)));
+//            StringBuilder buffer = new StringBuilder();
+//            String line;
+//            while ((line = in.readLine()) != null){
+//                buffer.append(line).append(FileTools.LF);
+//            }
+//            return buffer.toString();
+        }catch (Exception e) {
+            return defaultBanner;
         }
     }
 }
